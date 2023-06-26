@@ -1,0 +1,8 @@
+version: '2.2'
+
+services:
+  app:
+    image: flask_object_recognition
+    ports:
+      - 8080:8080
+    network_mode: "host"
