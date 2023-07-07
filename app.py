@@ -14,11 +14,6 @@ import re
 
 app = Flask(__name__)
 
-
-# # Define privacy parameters
-# epsilon = 0.03
-# sensitivity = 1.0
-
 def on_error(ws, error):
     print(error)
 
@@ -33,8 +28,9 @@ def on_open(ws):
 
 @app.route('/cam_object/<cam_link>/<epsilon>/<sensitivity>/<requestor_id>/<requestor_type>/<request_id>')
 def cam_object_recognition(cam_link, epsilon, sensitivity,requestor_id,requestor_type,request_id):
-    
+
     analyzer_id = platform.node()
+    print(analyzer_id)
 
     # Get current date and time
     now = datetime.datetime.now()
@@ -126,32 +122,31 @@ def cam_object_recognition(cam_link, epsilon, sensitivity,requestor_id,requestor
         
         print(labels)
 
-        # ws_req = {
-        #             "RequestPostTopicUUID": {
-        #             "topic_name": "SIFIS:Object_Recognition_Frame_Results",
-        #             "topic_uuid": "Object_Recognition_Frame_Results",
-        #             "value": {
-        #                 "description": "Object Recognition Frame Results",
-        #                 "requestor_id": str(requestor_id),
-        #                 "requestor_type": str(requestor_type),
-        #                 "analyzer_id": str(analyzer_id),
-        #                 "Type": "CAM_Link",
-        #                 "file_name": NULL,
-        #                 "epsilon": float(epsilon),
-        #                 "sensitivity": float(sensitivity),
-        #                 "scale_factor": float(scale_factor),
-        #                 "frame_id": int(frame_id),
-        #                 "labels": labels
-        #             }
-        #         }
-        #     }
-        # ws.send(json.dumps(ws_req))
+        ws_req = {
+                    "RequestPostTopicUUID": {
+                    "topic_name": "SIFIS:Object_Recognition_Frame_Results",
+                    "topic_uuid": "Object_Recognition_Frame_Results",
+                    "value": {
+                        "description": "Object Recognition Frame Results",
+                        "requestor_id": str(requestor_id),
+                        "requestor_type": str(requestor_type),
+                        "analyzer_id": str(analyzer_id),
+                        "analysis_id": str(analysis_id),
+                        "Type": "CAM",
+                        "file_name": "Empty",
+                        "epsilon": float(epsilon),
+                        "sensitivity": float(sensitivity),
+                        "scale_factor": float(scale_factor),
+                        "frame_id": int(frame_id),
+                        "labels": labels
+                    }
+                }
+            }
+        ws.send(json.dumps(ws_req))
 
 
         labels_dict[frame_id] = labels
         labels = []
-        # Display the resulting frame
-        # cv2.imshow("Object Detection", frame)
         if cv2.waitKey(1) == ord("q"):
             break
 
@@ -170,8 +165,8 @@ def cam_object_recognition(cam_link, epsilon, sensitivity,requestor_id,requestor
                             "request_id": str(request_id),
                             "analyzer_id": str(analyzer_id),
                             "analysis_id": str(analysis_id),
-                            "Type": "CAM_Link",
-                            "file_name": NULL,
+                            "Type": "CAM",
+                            "file_name": "Empty",
                             "epsilon": float(epsilon),
                             "sensitivity": float(sensitivity),
                             "scale_factor": float(scale_factor),
@@ -180,9 +175,8 @@ def cam_object_recognition(cam_link, epsilon, sensitivity,requestor_id,requestor
                     }
                 }
 
-    # return jsonify(ws_req_final)
+    ws.send(json.dumps(ws_req_final))
     return ws_req_final
-    # return f"Cam link: {cam_link}, epsilon parameter: {epsilon}, sensitivity parameter: {sensitivity}, scale factor: {scale_factor}, Analyzer ID: {analyzer_id}, labels: {labels_dict}"
 
 @app.route('/file_object/<file_name>/<epsilon>/<sensitivity>/<requestor_id>/<requestor_type>/<request_id>', methods=['POST'])
 def file_object_recognition(file_name,epsilon, sensitivity,requestor_id,requestor_type,request_id):
@@ -289,9 +283,6 @@ def file_object_recognition(file_name,epsilon, sensitivity,requestor_id,requesto
                 x, y, w, h = boxes[i]
                 label = classes[class_ids[i]]
                 labels.append(label)
-                # color = colors[class_ids[i]]
-                # cv2.rectangle(frame, (x, y), (x+w, y+h), color, 2)
-                # cv2.putText(frame, label, (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
             
             print(labels)
 
@@ -305,7 +296,7 @@ def file_object_recognition(file_name,epsilon, sensitivity,requestor_id,requesto
                             "requestor_type": str(requestor_type),
                             "analyzer_id": str(analyzer_id),
                             "analysis_id": str(analysis_id),
-                            "Type": "Video_file",
+                            "Type": "File",
                             "file_name": str(file_name),
                             "epsilon": float(epsilon),
                             "sensitivity": float(sensitivity),
@@ -321,8 +312,6 @@ def file_object_recognition(file_name,epsilon, sensitivity,requestor_id,requesto
 
             labels_dict[frame_id] = labels
             labels = []
-            # Display the resulting frame
-            # cv2.imshow("Object Detection", frame)
             if cv2.waitKey(1) == ord("q"):
                 break
 
@@ -341,7 +330,7 @@ def file_object_recognition(file_name,epsilon, sensitivity,requestor_id,requesto
                             "request_id": str(request_id),
                             "analyzer_id": str(analyzer_id),
                             "analysis_id": str(analysis_id),
-                            "Type": "Video_file",
+                            "Type": "File",
                             "file_name": str(file_name),
                             "epsilon": float(epsilon),
                             "sensitivity": float(sensitivity),
@@ -353,8 +342,7 @@ def file_object_recognition(file_name,epsilon, sensitivity,requestor_id,requesto
 
     ws.send(json.dumps(ws_req_final))
     return ws_req_final
-    # return f"video file: {video_link}, epsilon parameter: {epsilon}, sensitivity parameter: {sensitivity}, scale factor: {scale_factor}, Analyzer ID: {analyzer_id}, labels: {labels_dict}"
-
+ 
 if __name__ == "__main__":
     ws = websocket.WebSocketApp("ws://localhost:3000/ws",
                                 on_open=on_open,

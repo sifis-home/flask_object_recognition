@@ -5,4 +5,6 @@ services:
     image: flask_object_recognition
     ports:
       - 8080:8080
+    # devices:
+    #   - '/dev/video0:/dev/video0'
     network_mode: "host"
