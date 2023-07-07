@@ -1,4 +1,4 @@
-name: ci-test-app
+name: flask_object_recognition
 
 on:
   push:
