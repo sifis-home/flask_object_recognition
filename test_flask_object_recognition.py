@@ -1,3 +1,4 @@
+import platform
 from unittest.mock import patch
 
 from app import on_close, on_error, on_open
