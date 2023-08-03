@@ -31,6 +31,34 @@ def get_data():
     return analyzer_id
 
 
+def cap_analysis(frame_id, cap):
+    ret, frame = cap.read()
+    if not ret:
+        break
+
+    img = np.asarray(frame)
+
+    frame_id += 1
+
+    # Generate Laplacian noise
+    noise = np.random.laplace(scale=scale_factor, size=img.shape)
+
+    # Add the noise to the image
+    noisy_img = img + noise
+
+    noisy_img = cv2.convertScaleAbs(noisy_img)
+    frame = noisy_img
+
+    # Convert the frame to a blob and pass it through the network
+    blob = cv2.dnn.blobFromImage(
+        frame, 1 / 255, (416, 416), swapRB=True, crop=False
+    )
+    net.setInput(blob)
+    outs = net.forward(net.getUnconnectedOutLayersNames())
+
+    return img, frame_id, noisy_img, frame, blob, outs
+
+
 # @app.route(
 #     "/cam_object/<cam_link>/<epsilon>/<sensitivity>/<requestor_id>/<requestor_type>/<request_id>"
 # )
@@ -243,30 +271,9 @@ def file_object_recognition(
         frame_id = 0
 
         while True:
-            # Read a frame from the video
-            ret, frame = cap.read()
-            if not ret:
-                break
-
-            img = np.asarray(frame)
-
-            frame_id += 1
-
-            # Generate Laplacian noise
-            noise = np.random.laplace(scale=scale_factor, size=img.shape)
-
-            # Add the noise to the image
-            noisy_img = img + noise
-
-            noisy_img = cv2.convertScaleAbs(noisy_img)
-            frame = noisy_img
-
-            # Convert the frame to a blob and pass it through the network
-            blob = cv2.dnn.blobFromImage(
-                frame, 1 / 255, (416, 416), swapRB=True, crop=False
+            img, frame_id, noisy_img, frame, blob, outs = cap_analysis(
+                frame_id, cap
             )
-            net.setInput(blob)
-            outs = net.forward(net.getUnconnectedOutLayersNames())
 
             # Parse the network output and draw the detections on the frame
             class_ids = []
