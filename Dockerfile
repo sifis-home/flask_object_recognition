@@ -17,7 +17,6 @@ COPY coco.names /app
 RUN poetry config virtualenvs.create false
 RUN poetry install
 
-# RUN pip install -r requirements.txt
 EXPOSE 8080
 ENTRYPOINT ["python"]
 CMD ["app.py"]

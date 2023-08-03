@@ -1,7 +1,7 @@
 import platform
 from unittest.mock import patch
 
-from app import on_close, on_error, on_open
+from app import get_data, on_close, on_error, on_open
 
 
 def test_get_data():
