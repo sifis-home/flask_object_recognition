@@ -2,16 +2,12 @@ from unittest.mock import patch
 
 from app import on_close, on_error, on_open
 
-# def test_create_sequences():
-#     values = [1, 2, 3, 4, 5]
-#     time_steps = 3
-#     result = create_sequences(values, time_steps)
-#     expected_result = [
-#         [1, 2, 3],
-#         [2, 3, 4],
-#         [3, 4, 5],
-#     ]
-#     assert result.tolist() == expected_result
+
+def test_get_data():
+    analyzer_id = platform.node()
+    result = get_data()
+    expected_result = analyzer_id
+    assert result == expected_result
 
 
 def test_on_error():
