@@ -13,6 +13,7 @@ copy dog.jpg /app
 COPY yolov3.weights /app
 COPY yolov3.cfg /app
 COPY coco.names /app
+COPY config-3.py /app
 
 RUN poetry config virtualenvs.create false
 RUN poetry install
