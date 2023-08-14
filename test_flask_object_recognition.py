@@ -1,7 +1,7 @@
 import datetime
 import hashlib
 import platform
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 import cv2
 
@@ -52,11 +52,25 @@ def test_get_data():
     assert result == expected_result
 
 
-def test_load_yolo():
-    net = load_yolo()
-    expected_result = cv2.dnn.readNet("yolov3.weights", "yolov3.cfg")
+# def test_load_yolo():
+#     net = load_yolo()
+#     expected_result = cv2.dnn.readNet("yolov3.weights", "yolov3.cfg")
 
-    assert net == expected_result
+#     assert net == expected_result
+
+
+def test_load_yolo():
+    # Mock cv2.dnn.readNet
+    mocked_readNet = Mock(spec=cv2.dnn.readNet)
+    with patch("your_module.cv2.dnn.readNet", mocked_readNet):
+        # Call the function
+        net = load_yolo()
+
+    # Check if cv2.dnn.readNet was called with the expected arguments
+    mocked_readNet.assert_called_once_with("yolov3.weights", "yolov3.cfg")
+
+    # Check if the returned 'net' object matches the mocked result
+    assert net == mocked_readNet.return_value
 
 
 def test_get_coco():
