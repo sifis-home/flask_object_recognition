@@ -52,13 +52,6 @@ def test_get_data():
     assert result == expected_result
 
 
-# def test_load_yolo():
-#     net = load_yolo()
-#     expected_result = cv2.dnn.readNet("yolov3.weights", "yolov3.cfg")
-
-#     assert net == expected_result
-
-
 def test_load_yolo():
     # Mock cv2.dnn.readNet
     mocked_readNet = Mock(spec=cv2.dnn.readNet)
