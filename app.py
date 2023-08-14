@@ -71,6 +71,13 @@ def iterate(items_list):
     return types
 
 
+def add_noise(sensitivity, epsilon, img_size):
+    scale_factor = get_scale(sensitivity, epsilon)
+    noise = np.random.laplace(scale=scale_factor, size=img_size)
+
+    return noise
+
+
 # @app.route(
 #     "/cam_object/<cam_link>/<epsilon>/<sensitivity>/<requestor_id>/<requestor_type>/<request_id>"
 # )

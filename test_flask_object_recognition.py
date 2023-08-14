@@ -4,8 +4,10 @@ import platform
 from unittest.mock import Mock, patch
 
 import cv2
+import numpy as np
 
 from app import (
+    add_noise,
     get_analysis_id,
     get_coco,
     get_data,
@@ -116,3 +118,15 @@ def test_iterate():
         expected_types.append(item_type)
 
     assert types == expected_types
+
+
+def test_add_noise():
+    sensitivity = 1
+    epsilon = 0.3
+    img_size = (224, 224)
+
+    scale_factor = get_scale(sensitivity, epsilon)
+    expected_noise = np.random.laplace(scale=scale_factor, size=img_size)
+    noise = add_noise(sensitivity, epsilon, img_size)
+
+    assert noise == expected_noise
