@@ -10,7 +10,7 @@ from app import (
     get_coco,
     get_data,
     get_scale,
-    load_yolov3,
+    load_yolo,
     on_close,
     on_error,
     on_open,
@@ -52,8 +52,8 @@ def test_get_data():
     assert result == expected_result
 
 
-def test_load_yolov3():
-    net = load_yolov3()
+def test_load_yolo():
+    net = load_yolo()
     expected_result = cv2.dnn.readNet("yolov3.weights", "yolov3.cfg")
 
     assert net == expected_result

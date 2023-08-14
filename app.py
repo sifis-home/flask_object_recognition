@@ -31,7 +31,7 @@ def get_data():
     return analyzer_id
 
 
-def load_yolov3():
+def load_yolo():
     net = cv2.dnn.readNet("yolov3.weights", "yolov3.cfg")
 
     return net
@@ -76,7 +76,7 @@ def cam_object_recognition(
     analysis_id = get_analysis_id(analyzer_id, now, hash_value)
 
     # Load YOLOv3 network
-    net = load_yolov3()
+    net = load_yolo()
 
     # Load COCO dataset class names
     classes = get_coco()
@@ -230,7 +230,7 @@ def file_object_recognition(
     analysis_id = get_analysis_id(analyzer_id, now, hash_value)
 
     # Load YOLOv3 network
-    net = load_yolov3()
+    net = load_yolo()
 
     # Load COCO dataset class names
     classes = get_coco()
