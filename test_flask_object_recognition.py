@@ -121,10 +121,11 @@ def test_iterate():
 
 
 def test_add_noise():
-    items = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+    items = np.asarray([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
     sensitivity = 1
     epsilon = 0.3
-    img_size = np.asarray(items).shape
+    img_size = items.shape
+    print(img_size)
 
     scale_factor = get_scale(sensitivity, epsilon)
     expected_noise = np.random.laplace(scale=scale_factor, size=img_size)
