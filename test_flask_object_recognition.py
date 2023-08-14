@@ -10,6 +10,7 @@ from app import (
     get_coco,
     get_data,
     get_scale,
+    iterate,
     load_yolo,
     on_close,
     on_error,
@@ -96,3 +97,22 @@ def test_get_analysis_id():
     analysis_id = get_analysis_id(analyzer_id, now, hash_value)
 
     assert analysis_id == expected_analysis_id
+
+
+def test_iterate():
+    items_list = [5, 3.2]
+    types = iterate(items_list)
+
+    expected_types = []
+    for item in items_list:
+        if type(item) is int:
+            item_type = "Integer"
+        elif type(item) is float:
+            item_type = "Float"
+        elif type(item) is str:
+            item_type = "String"
+        else:
+            item_type = "Other"
+        expected_types.append(item_type)
+
+    assert types == expected_types
