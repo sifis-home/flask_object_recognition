@@ -31,6 +31,31 @@ def get_data():
     return analyzer_id
 
 
+def load_yolov3():
+    net = cv2.dnn.readNet("yolov3.weights", "yolov3.cfg")
+
+    return net
+
+
+def get_coco():
+    with open("coco.names", "r") as f:
+        classes = [line.strip() for line in f.readlines()]
+
+    return classes
+
+
+def get_scale(sensitivity, epsilon):
+    scale_factor = float(sensitivity) / float(epsilon)
+
+    return scale_factor
+
+
+def get_analysis_id(analyzer_id, now, hash_value):
+    analysis_id = str(analyzer_id) + str(now) + hash_value
+
+    return analysis_id
+
+
 @app.route(
     "/cam_object/<cam_link>/<epsilon>/<sensitivity>/<requestor_id>/<requestor_type>/<request_id>"
 )
@@ -48,14 +73,13 @@ def cam_object_recognition(
     hash_value = hash_object.hexdigest()
 
     # Concatenate the time and the hash
-    analysis_id = str(analyzer_id) + str(now) + hash_value
+    analysis_id = get_analysis_id(analyzer_id, now, hash_value)
 
     # Load YOLOv3 network
-    net = cv2.dnn.readNet("yolov3.weights", "yolov3.cfg")
+    net = load_yolov3()
 
     # Load COCO dataset class names
-    with open("coco.names", "r") as f:
-        classes = [line.strip() for line in f.readlines()]
+    classes = get_coco()
 
     # Generate random colors for each class
     colors = np.random.uniform(0, 255, size=(len(classes), 3))
@@ -63,7 +87,7 @@ def cam_object_recognition(
     labels_dict = {}
 
     # Compute the scale factor for Laplacian noise
-    scale_factor = float(sensitivity) / float(epsilon)
+    scale_factor = get_scale(sensitivity, epsilon)
 
     # for object detection
     cap = cv2.VideoCapture(cam_link)
@@ -126,10 +150,8 @@ def cam_object_recognition(
             label = classes[class_ids[i]]
             labels.append(label)
             color = colors[class_ids[i]]
-            # cv2.rectangle(frame, (x, y), (x+w, y+h), color, 2)
-            # cv2.putText(frame, label, (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
-        print(labels)
+        # print(labels)
 
         ws_req = {
             "RequestPostTopicUUID": {
@@ -205,14 +227,13 @@ def file_object_recognition(
     hash_value = hash_object.hexdigest()
 
     # Concatenate the time and the hash
-    analysis_id = str(analyzer_id) + str(now) + hash_value
+    analysis_id = get_analysis_id(analyzer_id, now, hash_value)
 
     # Load YOLOv3 network
-    net = cv2.dnn.readNet("yolov3.weights", "yolov3.cfg")
+    net = load_yolov3()
 
     # Load COCO dataset class names
-    with open("coco.names", "r") as f:
-        classes = [line.strip() for line in f.readlines()]
+    classes = get_coco()
 
     # Generate random colors for each class
     colors = np.random.uniform(0, 255, size=(len(classes), 3))
@@ -220,7 +241,7 @@ def file_object_recognition(
     labels_dict = {}
 
     # Compute the scale factor for Laplacian noise
-    scale_factor = float(sensitivity) / float(epsilon)
+    scale_factor = get_scale(sensitivity, epsilon)
 
     if not request.files:
         # If the user didn't submit any files, return a 400 (Bad Request) error.
@@ -298,7 +319,7 @@ def file_object_recognition(
                 label = classes[class_ids[i]]
                 labels.append(label)
 
-            print(labels)
+            # print(labels)
 
             ws_req = {
                 "RequestPostTopicUUID": {

@@ -1,14 +1,20 @@
+import datetime
+import hashlib
 import platform
 from unittest.mock import patch
 
-from app import get_data, on_close, on_error, on_open
+import cv2
 
-
-def test_get_data():
-    analyzer_id = platform.node()
-    result = get_data()
-    expected_result = analyzer_id
-    assert result == expected_result
+from app import (
+    get_analysis_id,
+    get_coco,
+    get_data,
+    get_scale,
+    load_yolov3,
+    on_close,
+    on_error,
+    on_open,
+)
 
 
 def test_on_error():
@@ -35,3 +41,51 @@ def test_on_open():
         on_open(None)
 
     mock_print.assert_called_once_with("### Connection established ###")
+
+
+def test_get_data():
+    analyzer_id = platform.node()
+
+    result = get_data()
+    expected_result = analyzer_id
+
+    assert result == expected_result
+
+
+def test_load_yolov3():
+    net = load_yolov3()
+    expected_result = cv2.dnn.readNet("yolov3.weights", "yolov3.cfg")
+
+    assert net == expected_result
+
+
+def test_get_coco():
+    with open("coco.names", "r") as f:
+        expected_classes = [line.strip() for line in f.readlines()]
+    classes = get_coco()
+
+    assert classes == expected_classes
+
+
+def test_get_scale():
+    sensitivity = 1
+    epsilon = 0.3
+
+    expected_scale_factor = float(sensitivity) / float(epsilon)
+    scale_factor = get_scale(sensitivity, epsilon)
+
+    assert scale_factor == expected_scale_factor
+
+
+def test_get_analysis_id():
+    analyzer_id = get_data()
+    now = datetime.datetime.now()
+
+    hash_object = hashlib.sha256()
+    hash_object.update(bytes(str(now), "utf-8"))
+    hash_value = hash_object.hexdigest()
+
+    expected_analysis_id = str(analyzer_id) + str(now) + hash_value
+    analysis_id = get_analysis_id(analyzer_id, now, hash_value)
+
+    assert analysis_id == expected_analysis_id
