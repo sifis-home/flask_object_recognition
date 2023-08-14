@@ -1,4 +1,19 @@
 # WP4 Analytic: Privacy-Aware Object Recognition
+
+[![Actions Status][actions badge]][actions]
+[![CodeCov][codecov badge]][codecov]
+[![LICENSE][license badge]][license]
+
+<!-- Links -->
+[actions]: https://github.com/sifis-home/flask_object_recognition/actions
+[codecov]: https://codecov.io/gh/sifis-home/flask_object_recognition
+[license]: LICENSES/MIT.txt
+
+<!-- Badges -->
+[actions badge]: https://github.com/sifis-home/flask_object_recognition/workflows/flask_object_recognition/badge.svg
+[codecov badge]: https://codecov.io/gh/sifis-home/flask_object_recognition/branch/master/graph/badge.svg
+[license badge]: https://img.shields.io/badge/license-MIT-blue.svg
+
 A crucial aspect of a smart home system is its ability to detect and recognize potentially dangerous objects that may not be easily identifiable by humans alone. This process involves object recognition, where suspicious objects are identified within captured images or videos and their locations within the frame are determined. These suspicious objects can range from intruders to fire incidents, elderly or vulnerable individuals in risky situations, or misplaced hazardous items like sharp tools. To achieve this, the system utilizes cameras to capture images or record videos, which are then transmitted for analysis. During the analysis phase, the system performs object recognition by identifying and classifying the objects present in the images, along with their precise locations. If any suspicious objects are detected, the user is promptly alerted, ensuring timely response and appropriate action. By integrating object recognition capabilities into the smart home system, it becomes capable of effectively identifying potential threats and alerting users to take necessary measures. This enhances the safety and security of the home environment by leveraging advanced image analysis techniques and automation. 
 The object recognition algorithm employed in the system, YOLOv3, leverages images or video frames obtained from cameras positioned throughout the controlled environment. This encompasses both the camera integrated within the controlled device and external surveillance cameras placed in the smart home environment. Moreover, recorded videos and individual images can also be utilized as input data for analysis. Through the processing of this input data, the object recognition system identifies and classifies objects based on the patterns and features learned by the underlying model during training. By comparing the detected objects to the known objects, the system can recognize and categorize the objects present in the captured frames. 
 
