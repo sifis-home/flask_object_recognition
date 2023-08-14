@@ -62,7 +62,7 @@ def test_get_data():
 def test_load_yolo():
     # Mock cv2.dnn.readNet
     mocked_readNet = Mock(spec=cv2.dnn.readNet)
-    with patch("your_module.cv2.dnn.readNet", mocked_readNet):
+    with patch("cv2.dnn.readNet", mocked_readNet):
         # Call the function
         net = load_yolo()
 
