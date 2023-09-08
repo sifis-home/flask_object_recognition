@@ -22,6 +22,7 @@ In order to preserve the privacy of data, Differential privacy mechanism is used
 ## Deploying
 
 ### Privacy-Aware Object Recognition in a container
+The DHT and the Analytics-API containers should be running before starting to build and run the image and container of the Privacy-Aware Object Recognition.
 
 Privacy-Aware Object Recognition is intended to run in a docker container on port 8080. The Dockerfile at the root of this repo describes the container. To build and run it execute the following commands:
 
