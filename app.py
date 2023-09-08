@@ -167,7 +167,6 @@ def add_noise(sensitivity, epsilon, img_size):
 
 #         # Draw the detections on the frame
 #         for i in indices:
-#             i = i[0]
 #             x, y, w, h = boxes[i]
 #             label = classes[class_ids[i]]
 #             labels.append(label)
@@ -336,7 +335,6 @@ def file_object_recognition(
 
             # Draw the detections on the frame
             for i in indices:
-                i = i[0]
                 x, y, w, h = boxes[i]
                 label = classes[class_ids[i]]
                 labels.append(label)
